@@ -14,6 +14,13 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import {
+  dragUploadFile,
+  openFile,
+  processImage,
+  saveFile,
+  uploadFile,
+} from './controllers';
 
 export default class AppUpdater {
   constructor() {
@@ -108,6 +115,12 @@ const createWindow = async () => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });
+
+  ipcMain.handle('open-dir', openFile);
+  ipcMain.handle('save-file', saveFile);
+  ipcMain.handle('upload-file', uploadFile);
+  ipcMain.handle('drag-upload-file', dragUploadFile);
+  ipcMain.handle('process-image', processImage);
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
