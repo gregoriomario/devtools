@@ -70,9 +70,11 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
+    title: 'DevTools',
+    width: 1000,
+    height: 600,
+    minWidth: 1000,
+    minHeight: 600,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
