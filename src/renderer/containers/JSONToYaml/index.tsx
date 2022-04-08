@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import yaml from 'js-yaml';
 import Button from '../../shared/Button';
@@ -24,7 +24,9 @@ const JSONToYaml = () => {
   };
 
   const handleSave = () => {
-    handleLoading(async () => await window.api.saveFile(yamlcontext), 'save');
+    handleLoading(async () => {
+      await window.electron.ipcRenderer.saveFile(yamlcontext);
+    }, 'save');
   };
 
   const handleRandom = () => {
@@ -43,6 +45,7 @@ const JSONToYaml = () => {
         const t = yaml.dump(data);
         setYamlContext(t);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
       }
     }, 'random');
@@ -50,7 +53,7 @@ const JSONToYaml = () => {
 
   const handleOpen = () => {
     handleLoading(async () => {
-      const content = await window.api.openFile('json');
+      const content = await window.electron.ipcRenderer.openFile('json');
       if (content) {
         setJsonContext(content);
         const text = yaml.dump(JSON.parse(content));
@@ -58,10 +61,6 @@ const JSONToYaml = () => {
       }
     }, 'open');
   };
-
-  useEffect(() => {
-    console.log();
-  });
 
   return (
     <Content className="grid gap-x-6 grid-cols-2 h-full">
@@ -115,7 +114,7 @@ const JSONToYaml = () => {
             try {
               const text = yaml.load(value);
               if (typeof text === 'string') {
-                throw 'Not valid yaml object';
+                throw Error('Not valid yaml object');
               }
               setYamlContext(value);
               setJsonContext(JSON.stringify(text, null, 2));

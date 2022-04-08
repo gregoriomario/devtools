@@ -1,6 +1,6 @@
-import React from "react";
-import Content from "../../layout/Content";
-import ganteng from "../../images/ganteng.jpeg";
+import Content from '../../layout/Content';
+
+const ganteng = '../../images/ganteng.jpeg';
 
 export type ImageType = {
   buffer: string;
@@ -8,12 +8,12 @@ export type ImageType = {
   name: string;
 };
 
-type Size = "lg" | "md" | "sm" | "xs" | "full";
+type Size = 'lg' | 'md' | 'sm' | 'xs' | 'full';
 
 type Rounded = `rounded-${Size}`;
 
 type ImageProps = {
-  src?: string | ImageType;
+  src: string | ImageType;
   className?: string;
   rounded?: Rounded;
   over?: number;
@@ -21,10 +21,10 @@ type ImageProps = {
 
 const Image = ({
   src = ganteng,
-  className = "",
-  rounded = "rounded-lg",
+  className = '',
+  rounded = 'rounded-lg',
   over = 0,
-}: ImageProps) => {
+}: ImageProps): JSX.Element => {
   return (
     <Content className={`relative overflow-hidden ${rounded} ${className} `}>
       {!!over && (
@@ -32,17 +32,27 @@ const Image = ({
           <p>+ {over}</p>
         </div>
       )}
-      {typeof src === "string" ? (
-        <img className="absolute w-full h-full object-cover" src={src}></img>
+      {typeof src === 'string' ? (
+        <img
+          className="absolute w-full h-full object-cover"
+          src={src}
+          alt={src}
+        />
       ) : (
         <img
           className="absolute w-full h-full object-cover"
           src={`data:${src.mimeType};base64,${src.buffer}`}
           alt={src.name}
-        ></img>
+        />
       )}
     </Content>
   );
+};
+
+Image.defaultProps = {
+  className: '',
+  rounded: 'rounded-lg',
+  over: 0,
 };
 
 export default Image;

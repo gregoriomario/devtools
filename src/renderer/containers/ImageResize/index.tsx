@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import Content from "../../layout/Content";
-import Grid from "../../layout/Content/Grid";
-import Button from "../../shared/Button";
-import DropDown from "../../shared/DropDown";
-import Image, { ImageType } from "../../shared/Image";
-import Input from "../../shared/Input";
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useState } from 'react';
+import Content from '../../layout/Content';
+import Grid from '../../layout/Content/Grid';
+import Button from '../../shared/Button';
+import DropDown from '../../shared/DropDown';
+import Image, { ImageType } from '../../shared/Image';
+import Input from '../../shared/Input';
 
-type ImageConfiguration = {
+export type ImageConfiguration = {
   width: string;
   height: string;
-  format: "jpeg" | "png";
+  format: 'jpeg' | 'png';
 };
 
 type InputAtt<T> = {
@@ -25,14 +26,14 @@ const ImageResize = () => {
   const [drag, setDrag] = useState<boolean>(false);
   const [images, setImage] = useState<Array<ImageType>>([]);
   const [resolution, setResolution] = useState<ImageConfiguration>({
-    width: "",
-    height: "",
-    format: "jpeg",
+    width: '',
+    height: '',
+    format: 'jpeg',
   });
 
   const handleConfiguration = (change: keyof ImageConfiguration) => {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      if (change !== "format" && e.target.value.match(/[a-z]/i)) return;
+      if (change !== 'format' && e.target.value.match(/[a-z]/i)) return;
       setResolution({
         ...resolution,
         [change]: e.target.value,
@@ -44,35 +45,35 @@ const ImageResize = () => {
     React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   >[] = [
     {
-      onChange: handleConfiguration("width"),
+      onChange: handleConfiguration('width'),
       value: resolution.width,
       side: true,
-      label: "width",
-      className: "form-input",
-      type: "text",
+      label: 'width',
+      className: 'form-input',
+      type: 'text',
     },
     {
-      onChange: handleConfiguration("height"),
+      onChange: handleConfiguration('height'),
       value: resolution.height,
       side: true,
-      label: "height",
-      className: "form-input",
-      type: "text",
+      label: 'height',
+      className: 'form-input',
+      type: 'text',
     },
     {
-      onChange: handleConfiguration("format"),
+      onChange: handleConfiguration('format'),
       value: resolution.format,
       side: true,
-      label: "format",
-      className: "form-input",
-      type: "select",
+      label: 'format',
+      className: 'form-input',
+      type: 'select',
     },
   ];
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const content = await window.api.processImage({ ...resolution, images });
+    await window.electron.ipcRenderer.processImage({ ...resolution, images });
   };
 
   const handleDrag = (
@@ -88,7 +89,11 @@ const ImageResize = () => {
   };
 
   const handleUpload = async () => {
-    const content = await window.api.uploadFile(["png", "jpg", "jpeg"]);
+    const content = await window.electron.ipcRenderer.uploadFile([
+      'png',
+      'jpg',
+      'jpeg',
+    ]);
     setImage(content);
     setDrag(false);
   };
@@ -97,14 +102,14 @@ const ImageResize = () => {
     const len = e.dataTransfer.items.length;
     const imagesUpload = [];
 
-    for (const x in [...Array(len)]) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (let x = 0; x < len; x += 1) {
       const file = e.dataTransfer.files.item(+x) as File & { path: string };
-      if (!file.type.includes("image")) {
-        continue;
-      }
-      imagesUpload.push(file?.path as string);
+      if (file.type.includes('image')) imagesUpload.push(file?.path as string);
     }
-    const content = await window.api.dragUploadFile(imagesUpload);
+    const content = await window.electron.ipcRenderer.dragUploadFile(
+      imagesUpload
+    );
     setImage(content);
     setDrag(false);
   };
@@ -114,13 +119,15 @@ const ImageResize = () => {
       return (
         <Grid row="grid-rows-2" col="grid-cols-2" gapY="gap-y-2" gapX="gap-x-2">
           {images.map((image, index) => {
-            if (index > 3) return;
+            if (index > 3) {
+              return <></>;
+            }
             return (
               <Image
                 over={index === 3 ? images.length - 3 : 0}
                 key={image.name}
                 src={image}
-              ></Image>
+              />
             );
           })}
         </Grid>
@@ -133,7 +140,7 @@ const ImageResize = () => {
         return (
           <Grid row="grid-rows-2" gapY="gap-y-2">
             {images.map((image) => {
-              return <Image key={image.name} src={image}></Image>;
+              return <Image key={image.name} src={image} />;
             })}
           </Grid>
         );
@@ -149,9 +156,9 @@ const ImageResize = () => {
               return (
                 <Image
                   key={image.name}
-                  className={index === 0 ? "col-span-2" : ""}
+                  className={index === 0 ? 'col-span-2' : ''}
                   src={image}
-                ></Image>
+                />
               );
             })}
           </Grid>
@@ -164,13 +171,13 @@ const ImageResize = () => {
             gapY="gap-y-2"
             gapX="gap-x-2"
           >
-            {images.map((image, index) => {
-              return <Image key={image.name} src={image}></Image>;
+            {images.map((image) => {
+              return <Image key={image.name} src={image} />;
             })}
           </Grid>
         );
       default:
-        return;
+        return <></>;
     }
   };
 
@@ -178,7 +185,7 @@ const ImageResize = () => {
     <Content className="grid gap-x-6 gap-y-6 grid-cols-2 grid-rows-2 h-full">
       <Content
         className={`relative bg-white h-full w-full rounded-lg ${
-          drag && "bg-slate-300"
+          drag && 'bg-slate-300'
         }`}
       >
         <Content
@@ -191,7 +198,7 @@ const ImageResize = () => {
         />
         <Content className="absolute flex justify-center items-center text-neutral-600 font-semibold text-lg top-0 w-full h-full">
           <Content className="flex flex-col">
-            {" "}
+            {' '}
             <svg
               className="mx-auto h-12 w-12 text-neutral-600"
               stroke="currentColor"
@@ -204,7 +211,7 @@ const ImageResize = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              ></path>
+              />
             </svg>
             <p>Upload File</p>
           </Content>
@@ -215,7 +222,7 @@ const ImageResize = () => {
       </Content>
       <form className="flex flex-col gap-y-3" onSubmit={handleSave}>
         {inputs.map((input) => {
-          if (input.type === "select") {
+          if (input.type === 'select') {
             return (
               <DropDown key={input.label} {...input}>
                 <DropDown.Item>jpeg</DropDown.Item>

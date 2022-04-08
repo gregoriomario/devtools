@@ -1,8 +1,8 @@
-import React from "react";
-import Content from ".";
+import React from 'react';
+import Content from '.';
 
-type GridType = "row" | "col";
-type Gap = "x" | "y";
+type GridType = 'row' | 'col';
+type Gap = 'x' | 'y';
 
 type GapScale =
   | `gap-${Gap}-0`
@@ -37,12 +37,12 @@ type GridProps = {
 
 const Grid = ({
   children,
-  col = "grid-cols-1",
-  row = "grid-rows-1",
-  gapX = "gap-x-0",
-  gapY = "gap-y-0",
+  col = 'grid-cols-1',
+  row = 'grid-rows-1',
+  gapX = 'gap-x-0',
+  gapY = 'gap-y-0',
   flow = `grid-flow-row`,
-  className = "",
+  className = '',
 }: GridProps) => {
   return (
     <Content
@@ -51,6 +51,15 @@ const Grid = ({
       {children}
     </Content>
   );
+};
+
+Grid.defaultProps = {
+  col: 'grid-cols-1',
+  row: 'grid-rows-1',
+  gapX: 'gap-x-0',
+  gapY: 'gap-y-0',
+  flow: `grid-flow-row`,
+  className: '',
 };
 
 export default Grid;

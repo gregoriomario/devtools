@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from '../../shared/Button';
 import DropDown from '../../shared/DropDown';
 import Input from '../../shared/Input';

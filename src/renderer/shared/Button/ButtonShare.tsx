@@ -1,7 +1,7 @@
-import { faClipboard } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import Button, { ButtonProps } from ".";
+/* eslint-disable react/jsx-props-no-spreading */
+import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button, { ButtonProps } from '.';
 
 type ButtonShareProps = {
   className?: string;
@@ -13,6 +13,10 @@ const ButtonShare = ({ className, ...args }: ButtonShareProps) => {
       <FontAwesomeIcon icon={faClipboard} />
     </Button>
   );
+};
+
+ButtonShare.defaultProps = {
+  className: '',
 };
 
 export default ButtonShare;

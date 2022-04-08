@@ -1,13 +1,17 @@
+import { ImageConfiguration } from './containers/ImageResize';
+import { ImageType } from './shared/Image';
+
 declare global {
   interface Window {
     electron: {
       ipcRenderer: {
-        myPing(): void;
-        on(
-          channel: string,
-          func: (...args: unknown[]) => void
-        ): (() => void) | undefined;
-        once(channel: string, func: (...args: unknown[]) => void): void;
+        uploadFile(files: string[]): Promise<Array<ImageType>>;
+        processImage(
+          conf: ImageConfiguration & { images: ImageType[] }
+        ): Promise<void>;
+        dragUploadFile(files: string[]): Promise<Array<ImageType>>;
+        saveFile(file: string): Promise<void>;
+        openFile(file: string): Promise<string>;
       };
     };
   }

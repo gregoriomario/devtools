@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react/jsx-props-no-spreading */
+import React from 'react';
 
 type ContentProps = {
   children?: React.ReactNode;
@@ -13,5 +14,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(
     );
   }
 );
+
+Content.defaultProps = {
+  children: <></>,
+};
 
 export default Content;

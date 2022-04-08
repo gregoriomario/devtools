@@ -1,28 +1,28 @@
-import React from "react";
+import React from 'react';
 
 type FlexColProps = {
   children: React.ReactNode;
   className?: string;
-  gap?: "small" | "medium" | "large" | "none";
+  gap?: 'small' | 'medium' | 'large' | 'none';
 };
 
-const FlexCol = ({ children = "", className, gap }: FlexColProps) => {
+const FlexCol = ({ children = '', className, gap }: FlexColProps) => {
   let GAP;
   switch (gap) {
-    case "small":
-      GAP = "gap-y-1";
+    case 'small':
+      GAP = 'gap-y-1';
       break;
-    case "medium":
-      GAP = "gap-y-3";
+    case 'medium':
+      GAP = 'gap-y-3';
       break;
-    case "large":
-      GAP = "gap-y-6";
+    case 'large':
+      GAP = 'gap-y-6';
       break;
-    case "none":
-      GAP = "";
+    case 'none':
+      GAP = '';
       break;
     default:
-      GAP = "gap-y-3";
+      GAP = 'gap-y-3';
       break;
   }
   return (
@@ -30,6 +30,11 @@ const FlexCol = ({ children = "", className, gap }: FlexColProps) => {
       {children}
     </div>
   );
+};
+
+FlexCol.defaultProps = {
+  className: '',
+  gap: 'medium',
 };
 
 export default FlexCol;

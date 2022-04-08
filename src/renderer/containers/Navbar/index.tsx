@@ -1,13 +1,12 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCoffee,
   IconDefinition,
   faClock,
   faCode,
   faImage,
-} from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+} from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import Content from '../../layout/Content';
 
 type NavbarProps = {
   className?: string;
@@ -21,28 +20,28 @@ type Property = {
 
 const properties: Array<Property> = [
   {
-    label: "Time Converter",
+    label: 'Time Converter',
     icon: faClock,
-    href: "/",
+    href: '/',
   },
   {
-    label: "JSON to YAML",
+    label: 'JSON to YAML',
     icon: faCode,
-    href: "/json",
+    href: '/json',
   },
   {
-    label: "Image Resize",
+    label: 'Image Resize',
     icon: faImage,
-    href: "/resize",
+    href: '/resize',
   },
 ];
 
 const Navbar = ({ className }: NavbarProps): JSX.Element => {
   return (
-    <div className="bg-slate-800 w-[300px] min-h-screen text-slate-300 px-3 py-10">
-      <div className="pb-3">
-        <h1 className="text-lg font-semibold">Menu</h1>
-      </div>
+    <Content
+      className={`bg-slate-800 w-[300px] min-h-screen text-slate-300 px-3 py-10 ${className}`}
+    >
+      <h1 className="text-lg font-semibold pb-3">Menu</h1>
       <div>
         <ul>
           {properties.map((p) => {
@@ -60,8 +59,12 @@ const Navbar = ({ className }: NavbarProps): JSX.Element => {
           })}
         </ul>
       </div>
-    </div>
+    </Content>
   );
+};
+
+Navbar.defaultProps = {
+  className: '',
 };
 
 export default Navbar;
