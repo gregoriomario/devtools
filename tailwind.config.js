@@ -1,6 +1,6 @@
-import forms from '@tailwindcss/forms';
-import typography from '@tailwindcss/typography';
-import colors from 'tailwindcss/colors';
+const colors = require('tailwindcss/colors');
+const forms = require('@tailwindcss/forms');
+const typography = require('@tailwindcss/typography');
 
 module.exports = {
   content: ['./src/renderer/**/*.{js,jsx,ts,tsx,ejs}'],
