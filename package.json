@@ -31,7 +31,7 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
+    "productName": "DevTools",
     "appId": "org.erb.ElectronReact",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
