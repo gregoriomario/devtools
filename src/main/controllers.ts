@@ -1,5 +1,6 @@
-import { dialog, IpcMainInvokeEvent } from 'electron';
+import { dialog, IpcMainInvokeEvent, shell } from 'electron';
 import { readFileSync, writeFileSync } from 'fs';
+import path from 'path';
 import sharp from 'sharp';
 import { ImageConfiguration } from '../renderer/containers/ImageResize';
 import { ImageType } from '../renderer/shared/Image';
@@ -108,31 +109,48 @@ export async function processImage(
   _: IpcMainInvokeEvent,
   conf: ImageConfiguration & { images: ImageType[] }
 ) {
-  const { images, width, height, format } = conf;
+  try {
+    const { images, width, height, format } = conf;
+    const size = {};
 
-  const size = {};
+    if (width) Object.assign(size, { width: +width });
+    if (height) Object.assign(size, { height: +height });
 
-  if (width) Object.assign(size, { width: +width });
-  if (height) Object.assign(size, { height: +height });
+    const { canceled, filePath } = await dialog.showSaveDialog({
+      defaultPath: 'resize-',
+      nameFieldLabel: 'Prefix',
+    });
 
-  const { canceled, filePath } = await dialog.showSaveDialog({
-    defaultPath: 'resize-',
-    nameFieldLabel: 'Prefix',
-  });
+    if (canceled) return null;
 
-  if (canceled) return null;
+    images.forEach(async (img, index) => {
+      const buffer = Buffer.from(img.buffer, 'base64');
+      let imgBuffer;
+      // If platform windows
+      let newImageName;
+      if (process.platform === 'win32') {
+        const justName = img.name.includes('\\')
+          ? img.name.split('\\').pop()
+          : '';
+        newImageName = `${(justName as string).split('.')[0]}.${format}`;
+      } else {
+        newImageName = `${img.name.split('.')[0]}.${format}`;
+      }
+      const outputPath = path.join(filePath + newImageName);
+      if (format === 'jpeg') {
+        imgBuffer = await sharp(buffer).resize(size).jpeg().toBuffer();
+      } else {
+        imgBuffer = await sharp(buffer).resize(size).png().toBuffer();
+      }
+      writeFileSync(outputPath, imgBuffer, { encoding: 'base64' });
 
-  images.forEach(async (img) => {
-    const buffer = Buffer.from(img.buffer, 'base64');
-    let imgBuffer;
-    const newImageName = `${img.name.split('.')[0]}.${format}`;
-    if (format === 'jpeg') {
-      imgBuffer = await sharp(buffer).resize(size).jpeg().toBuffer();
-    } else {
-      imgBuffer = await sharp(buffer).resize(size).png().toBuffer();
-    }
-    writeFileSync(filePath + newImageName, imgBuffer, { encoding: 'base64' });
-  });
+      if (index === images.length - 1) {
+        shell.showItemInFolder(outputPath);
+      }
+    });
 
-  return conf;
+    return conf;
+  } catch (error) {
+    return null;
+  }
 }
